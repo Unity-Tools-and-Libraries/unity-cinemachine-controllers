@@ -10,7 +10,7 @@ namespace io.github.thisisnozaku.cameras
         public MoveDirection[] inputs;
         public float speed;
         [SerializeField]
-        private new CinemachineVirtualCamera camera;
+        private new CinemachineVirtualCamera virtualCamera;
 
         public MoveDirection[] directions = new MoveDirection[]
         {
@@ -37,16 +37,20 @@ namespace io.github.thisisnozaku.cameras
                 switch (direction)
                 {
                     case MoveDirection.Left:
-                        camera.transform.position += Vector3.left * speed;
+                        virtualCamera.ForceCameraPosition(virtualCamera.transform.position + Vector3.left * speed,
+                            transform.rotation);
                         break;
                     case MoveDirection.Right:
-                        camera.transform.position += Vector3.right * speed;
+                        virtualCamera.ForceCameraPosition(virtualCamera.transform.position + Vector3.right * speed,
+                            transform.rotation);
                         break;
                     case MoveDirection.Up:
-                        camera.transform.position += Vector3.up * speed;
+                        virtualCamera.ForceCameraPosition(virtualCamera.transform.position + Vector3.up * speed,
+                            transform.rotation);
                         break;
                     case MoveDirection.Down:
-                        camera.transform.position += Vector3.down * speed;
+                        virtualCamera.ForceCameraPosition(virtualCamera.transform.position + Vector3.down * speed,
+                            transform.rotation);
                         break;
                 }
             }

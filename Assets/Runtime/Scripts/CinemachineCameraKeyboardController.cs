@@ -8,31 +8,25 @@ namespace io.github.thisisnozaku.cameras
 
         public KeyCode[] controls = new KeyCode[]
         {
-        KeyCode.UpArrow,
-        KeyCode.DownArrow,
-        KeyCode.LeftArrow,
-        KeyCode.RightArrow
+            KeyCode.UpArrow,
+            KeyCode.DownArrow,
+            KeyCode.LeftArrow,
+            KeyCode.RightArrow
         };
 
         // Update is called once per frame
         void Update()
         {
-            var inputs = new MoveDirection[2];
-            int inputIndex = 0;
             for (int i = 0; i < controls.Length; i++)
             {
                 if (Input.GetKey(controls[i]))
                 {
-                    inputs[inputIndex] = directions[i];
-                    inputIndex++;
-                }
-                if (inputIndex == inputs.Length)
+                    inputs[i] = directions[i];
+                } else
                 {
-                    break;
+                    inputs[i] = MoveDirection.None;
                 }
             }
         }
-
-
     }
 }
