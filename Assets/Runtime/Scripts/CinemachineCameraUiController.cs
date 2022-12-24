@@ -11,6 +11,8 @@ namespace io.github.thisisnozaku.cameras
         [Tooltip("EventTriggers which trigger camera movement when moused over. Just adding the EventTrigger to the component is enough; " +
             "this component will handle configuring it.")]
         public EventTrigger[] controls;
+        [Tooltip("If true, when the camera reaches an edge of the bounds, the control(s) involved in moving in the direction(s) will be deactivated.")]
+        public bool disableControlsAtBoundary;
 
         new void Start()
         {
@@ -24,12 +26,12 @@ namespace io.github.thisisnozaku.cameras
 
                     enterTrigger.callback.AddListener((ue) =>
                     {
-                        Debug.Log(inputs.Length);
-                        Debug.Log(directions.Length);
-                        Debug.Log(index);
-                        inputs[index] = directions[index];
+                        inputs[index] = EnabledDirections[directions[index]] ? directions[index] : MoveDirection.None;
                     });
-                    controls[i].triggers.Add(enterTrigger);
+                    if (controls[i])
+                    {
+                        controls[i].triggers.Add(enterTrigger);
+                    }
 
                     var exitTrigger = new EventTrigger.Entry();
                     exitTrigger.eventID = EventTriggerType.PointerExit;
@@ -37,7 +39,10 @@ namespace io.github.thisisnozaku.cameras
                     {
                         inputs[index] = MoveDirection.None;
                     });
-                    controls[i].triggers.Add(exitTrigger);
+                    if (controls[i])
+                    {
+                        controls[i].triggers.Add(exitTrigger);
+                    }
                 }
             }
         }
@@ -45,7 +50,13 @@ namespace io.github.thisisnozaku.cameras
         // Update is called once per frame
         void Update()
         {
-
+            if (disableControlsAtBoundary)
+            {
+                for (int i = 0; i < controls.Length; i++)
+                {
+                    controls[i].gameObject.SetActive(EnabledDirections[directions[i]]);
+                }
+            }
         }
     }
 }
