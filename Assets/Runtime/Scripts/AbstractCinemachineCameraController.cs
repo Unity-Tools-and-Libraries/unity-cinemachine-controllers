@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,19 +10,25 @@ namespace io.github.thisisnozaku.cameras
         [Tooltip("The directions to move on the next update.")]
         public MoveDirection[] inputs;
         public float speed;
-        [SerializeField]
-        private new CinemachineVirtualCamera virtualCamera;
+        private CinemachineVirtualCamera virtualCamera;
 
         public MoveDirection[] directions = new MoveDirection[]
         {
-        MoveDirection.Up,
-        MoveDirection.Down,
-        MoveDirection.Left,
-        MoveDirection.Right
+            MoveDirection.Up,
+            MoveDirection.Down,
+            MoveDirection.Left,
+            MoveDirection.Right
+        };
+        public Dictionary<MoveDirection, bool> EnabledDirections = new Dictionary<MoveDirection, bool>() {
+            { MoveDirection.Up, true},
+            { MoveDirection.Down, true},
+            { MoveDirection.Left, true},
+            { MoveDirection.Right, true}
         };
         // Start is called before the first frame update
         protected void Start()
         {
+            virtualCamera = GetComponent<CinemachineVirtualCamera>();
             inputs = new MoveDirection[directions.Length];
             for (int i = 0; i < directions.Length; i++)
             {
@@ -29,11 +36,18 @@ namespace io.github.thisisnozaku.cameras
             }
         }
 
+        private Vector3 lastPosition;
+
         // Update is called once per frame
         void LateUpdate()
         {
+            var startPosition = virtualCamera.transform.position;
             foreach (var direction in inputs)
             {
+                if(direction == MoveDirection.None || !EnabledDirections[direction])
+                {
+                    continue;
+                }
                 switch (direction)
                 {
                     case MoveDirection.Left:
@@ -53,7 +67,21 @@ namespace io.github.thisisnozaku.cameras
                             transform.rotation);
                         break;
                 }
+                EnabledDirections[direction.Invert()] = true;
             }
+            if(virtualCamera.transform.position == lastPosition)
+            {
+                for(int i = 0; i < inputs.Length; i++)
+                {
+                    if(inputs[i] != MoveDirection.None)
+                    {
+                        Debug.Log(string.Format("Disable direction {0}", inputs[i]));
+                        EnabledDirections[inputs[i]] = false;
+                        inputs[i] = MoveDirection.None;
+                    }
+                }
+            }
+            lastPosition = virtualCamera.transform.position;
         }
     }
 }
