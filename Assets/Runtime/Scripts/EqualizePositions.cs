@@ -12,12 +12,12 @@ public class EqualizePositions : CinemachineExtension
     {
         if (stage == CinemachineCore.Stage.Finalize)
         {
-            // Set the transform position. This keeps the vcam within the bounds.
-            // This keeps the virtual camera from moving so that you don't have to wait to reverse its movement before moving again.
-            vcam.transform.position = state.RawPosition = state.CorrectedPosition;
-            state.PositionCorrection = Vector3.zero;
-            state.RawOrientation = state.CorrectedOrientation;
-            state.OrientationCorrection = Quaternion.identity;
+            // Set the transform position.
+            // This keeps the transform for the virtual camera from moving outside the bounds,
+			// so that you don't have to undo movement that would put it outside before moving within them again.
+            vcam.transform.position = state.CorrectedPosition;
+            //state.PositionCorrection = Vector3.zero;
+            //state.RawOrientation = state.CorrectedOrientation;
         }
     }
 }
