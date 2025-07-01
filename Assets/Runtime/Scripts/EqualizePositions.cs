@@ -1,5 +1,5 @@
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 // source https://forum.unity.com/threads/cinemachine-virtual-camera-going-out-of-collision-bounds.1361239/#post-8591542
 [SaveDuringPlay]
@@ -14,10 +14,8 @@ public class EqualizePositions : CinemachineExtension
         {
             // Set the transform position.
             // This keeps the transform for the virtual camera from moving outside the bounds,
-			// so that you don't have to undo movement that would put it outside before moving within them again.
-            vcam.transform.position = state.CorrectedPosition;
-            //state.PositionCorrection = Vector3.zero;
-            //state.RawOrientation = state.CorrectedOrientation;
+            // so that you don't have to undo movement that would put it outside before moving within them again.
+            vcam.transform.position = state.PositionCorrection;
         }
     }
 }

@@ -1,16 +1,16 @@
 using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 namespace io.github.thisisnozaku.cameras
 {
-    [RequireComponent(typeof(CinemachineVirtualCamera))]
+    [RequireComponent(typeof(CinemachineCamera))]
     public class AbstractCinemachineCameraController : MonoBehaviour
     {
         [Tooltip("The directions to move on the next update.")]
         public MoveDirection[] inputs;
         public float speed;
-        private CinemachineVirtualCamera virtualCamera;
+        private CinemachineCamera virtualCamera;
 
         public MoveDirection[] directions = new MoveDirection[]
         {
@@ -28,7 +28,7 @@ namespace io.github.thisisnozaku.cameras
         // Start is called before the first frame update
         protected void Start()
         {
-            virtualCamera = GetComponent<CinemachineVirtualCamera>();
+            virtualCamera = GetComponent<CinemachineCamera>();
             inputs = new MoveDirection[directions.Length];
             for (int i = 0; i < directions.Length; i++)
             {
